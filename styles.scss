@@ -16,10 +16,6 @@ body {
   font-family: sans-serif;
 }
 
-[v-cloak] {
-  display: none;
-}
-
 h1 {
   font-size: 1.25rem;
   font-weight: bold;
@@ -39,10 +35,20 @@ input[type=text], button {
   padding: $space/2;
 }
 
+noscript {
+  display: block;
+  padding: $space;
+  font-size: 1.25rem;  
+}
+
 #fmfriend {
   display: flex;
   flex-direction: column;
   height: 100%;
+
+  &[v-cloak] {
+    display: none;
+  }
   
   .error {
     padding: $space;
