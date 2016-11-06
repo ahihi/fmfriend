@@ -1,6 +1,6 @@
 # FMFriend
 
-WebMIDI-based editor for the Korg Volca FM synthesizer.
+WebMIDI-based editor for the Korg Volca FM synthesizer. Live at [fmfriend.foldplop.com](https://fmfriend.foldplop.com/).
 
 ![Screenshot](http://static.foldplop.com/misc/fmfriend.png)
 
