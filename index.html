@@ -12,19 +12,27 @@
     <div id="fmfriend" v-cloak>
       <div v-if="!fmf.status.success" class="error">{{ fmf.status.error }}</div>
       <template v-else>
-        <div class="output-chooser">
-          <h1>MIDI output</h1>
-          <select v-model="fmf.output">
-            <option v-for="(output, i) in fmf.outputs" v-bind:value="i">{{ output.name }}</option>
-          </select>
+        <div class="header">
+          <div class="output-chooser">
+            <h1>MIDI output</h1>
+            <select v-model="fmf.output">
+              <option v-for="(output, i) in fmf.outputs" v-bind:value="i">{{ output.name }}</option>
+            </select>
+          </div>
+          
+            <div class="name">
+              <h1>Patch name</h1>
+              <input v-model="patch_name" v-on:input="fmf.updated" type="text" maxlength="10" placeholder=" "></input>
+            </div>
+            
+            <div class="send-patch">
+              <button v-on:click="fmf.send_patch">Send patch</button>
+              <input type="checkbox" v-model="fmf.send_on_update" id="send-on-update"></input>
+              <label for="send-on-update">Send on parameter change</label>
+            </div>
         </div>
         
         <div class="patch">
-          <div class="name">
-            <h1>Patch name</h1>
-            <input v-model="patch_name" v-on:input="fmf.updated" type="text" maxlength="10" placeholder=" "></input>
-          </div>
-        
           <div class="sections">            
             <div v-for="(operator, operator_ix) in fmf.operators" class="section-container">
               <div class="section operator">

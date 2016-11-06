@@ -14,7 +14,7 @@ function FmFriend() {
     
     self.channel = 11;
     
-    self.send_on_update = true;
+    self.send_on_update = false;
     
     self.updated = _.debounce(function() {
         if(self.send_on_update) {
@@ -62,7 +62,6 @@ function FmFriend() {
             },
             set: function(value) {
                 var clipped_value = Math.max(min, Math.min(max, value));
-                console.log(name + " (" + index + "): " + clipped_value);
                 self.param_values[index] = clipped_value;                
             },
             reset: function() {
@@ -179,7 +178,6 @@ function FmFriend() {
                         op_on_off_flags |= 1 << i;
                     }
                 });
-                console.log(op_on_off_flags);
                 byte = op_on_off_flags;
             }
             
@@ -187,9 +185,7 @@ function FmFriend() {
         }
     };
     
-    self.send_patch = function() {
-        console.log("Sending patch");
-        
+    self.send_patch = function() {        
         var sysex = [
             0xf0,   // Exclusive Status
             0x43,   // YAMAHA ID
