@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="styles.css">
+    <script src="jquery-3.1.1.min.js"></script>
+    <script src="underscore-min.js"></script>
+    <script src="vue.min.js"></script>
+    <script src="fmfriend.js"></script>
+    <script src="fmfriend-view.js"></script>
+  </head>
+  <body>
+    <div id="fmfriend" v-cloak>
+      <div v-if="!fmf.status.success" class="error">{{ fmf.status.error }}</div>
+      <template v-else>
+        <div class="output-chooser">
+          <h1>MIDI output</h1>
+          <select v-model="fmf.output">
+            <option v-for="(output, i) in fmf.outputs" v-bind:value="i">{{ output.name }}</option>
+          </select>
+        </div>
+        
+        <div class="patch">
+          <div class="name">
+            <h1>Patch name</h1>
+            <input v-model="patch_name" v-on:input="fmf.updated" type="text" maxlength="10" placeholder=" "></input>
+          </div>
+        
+          <div class="sections">            
+            <div v-for="(operator, operator_ix) in fmf.operators" class="section-container">
+              <div class="section operator">
+                <div class="header">
+                  <h1>{{ operator.name }}</h1>
+                  <input type="checkbox" v-model="operator.enabled" v-on:change="fmf.updated">
+                </div>
+                
+                <hr>
+                
+                <div class="parameters">
+                  <div class="parameter-group">
+                    <div class="parameter-subgroup">
+                      <fmf-slider :fmf="fmf" :param="operator.freq_coarse"></fmf-slider>
+                      <fmf-slider :fmf="fmf" :param="operator.freq_fine"></fmf-slider>
+                    </div>
+                    
+                    <div class="parameter-subgroup">
+                      <fmf-radios :fmf="fmf" :param="operator.osc_mode" :operator="operator_ix" group="osc-mode" :pretty="fmf.osc_mode_pretty"></fmf-radios>
+                      <fmf-slider :fmf="fmf" :param="operator.detune"></fmf-slider>
+                    </div>
+                  </div>
+                  
+                  <hr>
+                  
+                  <div class="parameter-group">
+                    <div class="parameter-subgroup">
+                      <fmf-slider :fmf="fmf" :param="operator.amp_mod_sense"></fmf-slider>
+                      <fmf-slider :fmf="fmf" :param="operator.key_velocity_sense"></fmf-slider>
+                    </div>
+                    <div class="parameter-subgroup">
+                      <fmf-slider :fmf="fmf" :param="operator.output_level"></fmf-slider>
+                    </div>
+                  </div>
+                  
+                  <hr>
+                  
+                  <div class="parameter-group">
+                    <div class="parameter-subgroup">
+                      <fmf-slider v-for="eg_rate in operator.eg_rates" :fmf="fmf" :param="eg_rate"></fmf-slider>
+                    </div>
+                    
+                    <div class="parameter-subgroup">
+                      <fmf-slider v-for="eg_level in operator.eg_levels" :fmf="fmf" :param="eg_level"></fmf-slider>
+                    </div>
+                  </div>
+                  
+                  <hr>
+
+                  <div class="parameter-group">                    
+                    <div class="parameter-subgroup">
+                      <fmf-slider :fmf="fmf" :param="operator.level_scale_left_depth"></fmf-slider>
+                      <fmf-slider :fmf="fmf" :param="operator.level_scale_right_depth"></fmf-slider>
+                      <fmf-slider :fmf="fmf" :param="operator.level_scale_break_point"></fmf-slider>
+                    </div>
+                    
+                    <div class="parameter-subgroup">
+                      <fmf-radios :fmf="fmf" :param="operator.level_scale_left_curve" :operator="operator_ix" group="level-scale-left-curve" :pretty="fmf.level_scale_curve_pretty"></fmf-radios>
+                      <fmf-radios :fmf="fmf" :param="operator.level_scale_right_curve" :operator="operator_ix" group="level-scale-right-curve" :pretty="fmf.level_scale_curve_pretty"></fmf-radios>
+                      <fmf-slider :fmf="fmf" :param="operator.osc_rate_scale"></fmf-slider>
+                    </div>
+                  </div>
+                  
+                </div>                
+              </div>
+            </div>
+            
+            <div class="section-container">
+              <div class="section">
+                <div class="header">
+                  <h1>Global</h1>
+                </div>
+                
+                <hr>
+                
+                <div class="parameters">
+                  <div class="parameter-subgroup">
+                    <fmf-slider :fmf="fmf" :param="fmf.global.algorithm"></fmf-slider>
+                  </div>
+                  
+                  <hr>
+                  
+                  <div class="parameter-group">
+                    <div class="parameter-subgroup">
+                      <fmf-slider :fmf="fmf" :param="fmf.global.transpose"></fmf-slider>
+                      <fmf-slider :fmf="fmf" :param="fmf.global.feedback"></fmf-slider>                      
+                    </div>
+                    
+                    <div class="parameter-subgroup">
+                      <fmf-radios :fmf="fmf" :param="fmf.global.osc_key_sync" group="osc-key-sync" :pretty="fmf.osc_key_sync_pretty"></fmf-radios>
+                      <fmf-slider :fmf="fmf" :param="fmf.global.mod_sense_pitch"></fmf-slider>
+                    </div>
+                  </div>
+                  
+                  <hr>
+                  
+                  <div class="parameter-group">
+                    <div class="parameter-subgroup">
+                      <fmf-slider v-for="pitch_eg_rate in fmf.global.pitch_eg_rates" :fmf="fmf" :param="pitch_eg_rate"></fmf-slider>
+                    </div>
+                    
+                    <div class="parameter-subgroup">
+                      <fmf-slider v-for="pitch_eg_level in fmf.global.pitch_eg_levels" :fmf="fmf" :param="pitch_eg_level"></fmf-slider>
+                    </div>
+                  </div>
+                  
+                  <hr>
+                  
+                  <div class="parameter-group">
+                    <div class="parameter-subgroup">
+                      <fmf-radios :fmf="fmf" :param="fmf.global.lfo_sync" group="lfo-sync" :pretty="fmf.lfo_sync_pretty"></fmf-radios>
+                      <fmf-slider :fmf="fmf" :param="fmf.global.lfo_rate"></fmf-slider>
+                      <fmf-slider :fmf="fmf" :param="fmf.global.lfo_delay"></fmf-slider>
+                    </div>
+                    
+                    <div class="parameter-subgroup">
+                      <fmf-slider :fmf="fmf" :param="fmf.global.lfo_pitch_mod_depth"></fmf-slider>
+                      <fmf-slider :fmf="fmf" :param="fmf.global.lfo_amp_mod_depth"></fmf-slider>
+                      <fmf-slider :fmf="fmf" :param="fmf.global.lfo_wave"></fmf-slider>
+                    </div>
+                  </div>
+                  
+                </div>
+                
+              </div>
+            </div>
+          </div>
+        </div>
+      </template>
+    </div>
+  </body>
+</html>
